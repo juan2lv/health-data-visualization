@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+<style>
+
+body {
+  font: 10px sans-serif;
+}
+
+div {
+  padding-left: 50px;
+  padding-top: 15px;
+  width: 50%;
+  margin: 0 auto;
+  font: 14px;
+}
+
+input {
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  text-align: center;
+  font: 14px;
+  width: 60px;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke-width: 1.5px;
+}
+
+</style>
+<body>
+  <div>
+    Number of Lines:
+    <input id="linecount" name="lines" value="7" onkeyup="render()"></input>
+    Points per Line:
+    <input id="pointcount" name="points" value="3" onkeyup="render()"></input>
+  </div>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+dataset = [
+            [
+              [{x:5,y:2}, {x:10,y:6}, {x:15,y:8}, {x:20,y:7}, {x:25,y:10}, {x:30,y:20}],
+              [{x:5,y:1}, {x:10,y:5}, {x:15,y:7}, {x:20,y:10}, {x:25,y:15}, {x:30,y:30}]
+            ],
+            [
+              [{x:5,y:1}, {x:10,y:6}, {x:15,y:8}, {x:20,y:7}, {x:25,y:10}, {x:30,y:20}],
+              [{x:5,y:2}, {x:10,y:5}, {x:15,y:7}, {x:20,y:8}, {x:25,y:12}, {x:30,y:18}]
+            ]
+          ];
+
+var width = 960,
+    height = 500-37;
+
+var margin = {top: 20, right:20, bottom:20, left:50};
+
+// draw and append the container
+var svg = d3.select("body").append("svg")
+    .attr("height", height)
+    .attr("width", width)
+    .append("g")
+      .attr("transform","translate(" + margin.left + "," + margin.right + ")");
+
+var xScale = d3.scale.linear().domain([0,30])
+      .range([0,width - margin.left - margin.right]);
+
+var yScale = d3.scale.linear()
+      .range([height - margin.top - margin.bottom,0]);
+
+var line = d3.svg.line().interpolate("monotone")
+  .x(function(d){ return xScale(d.x); })
+  .y(function(d){ return yScale(d.y); });
+
+// create random data
+
+function newData(lineNumber, points){
+  return d3.range(lineNumber).map(function(){
+    return d3.range(points).map(function(item,idx){
+      return {x:idx/(points-1),y:Math.random()*100};
+    });
+  });
+}
+
+var count = 0;
+
+function render(){
+  // generate new data
+  //var data = newData(+document.getElementById("linecount").value,+document.getElementById("pointcount").value);
+  var data = dataset[count%2];
+  console.log(JSON.stringify(data));
+  
+
+  // obtain absolute min and max
+  var yMin = data.reduce(function(pv,cv){
+    var currentMin = cv.reduce(function(pv,cv){
+      return Math.min(pv,cv.y);
+    },100)
+    return Math.min(pv,currentMin);
+  },100);
+  var yMax = data.reduce(function(pv,cv){
+    var currentMax = cv.reduce(function(pv,cv){
+      return Math.max(pv,cv.y);
+    },0)
+    return Math.max(pv,currentMax);
+  },0);
+
+  // set domain for axis
+  yScale.domain([yMin,yMax]);
+
+  // create axis scale
+  var yAxis = d3.svg.axis()
+      .scale(yScale).orient("left");
+
+  var xAxis = d3.svg.axis()
+  .scale(xScale)
+  .orient('bottom');
+
+  // if no axis exists, create one, otherwise update it
+  if (svg.selectAll(".y.axis")[0].length < 1 ){
+    svg.append("g")
+        .attr("class","y axis")
+        .call(yAxis);
+
+    svg.append("g")
+        .attr("class","x axis")
+        .call(xAxis);
+  } else {
+    svg.selectAll(".y.axis").transition().duration(1500).call(yAxis);
+  }
+
+  // generate line paths
+  var lines = svg.selectAll(".line").data(data).attr("class","line");
+
+  // transition from previous paths to new paths
+  lines.transition().duration(1500)
+    .attr("d",line)
+    .style("stroke", function(){
+      return '#'+Math.floor(Math.random()*16777215).toString(16);
+    });
+    
+  // enter any new data
+  lines.enter()
+    .append("path")
+    .attr("class","line")
+    .attr("d",line)
+    .style("stroke", function(){
+      return '#'+Math.floor(Math.random()*16777215).toString(16);
+    });
+
+  // exit
+  lines.exit()
+    .remove();
+
+  count++;
+}
+
+// initial page render
+render();
+
+// continuous page render
+setInterval(render, 1500);
+
+</script>
+</body>
+
+</html>
