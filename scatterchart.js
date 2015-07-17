@@ -1,4 +1,5 @@
-var data = [[5,0,300,"ICD10"], [10,17,200,"ICD9"], [15,4,50,"ICD10"], [2,8,50,"ICD9"], [10,0,20,"ICD9"]];
+var data = [[[5,0,300,"ICD10"], [10,17,200,"ICD9"], [15,4,50,"ICD10"], [2,8,50,"ICD9"], [10,0,20,"ICD9"]],
+            [[5,1,100,"ICD10"], [10,17,200,"ICD9"], [15,4,50,"ICD10"], [2,8,50,"ICD9"], [10,0,20,"ICD9"]]];
    
 var margin = {top: 20, right: 15, bottom: 60, left: 60}
 	, width = 1000 - margin.left - margin.right
@@ -18,7 +19,7 @@ var r = d3.scale.linear()
 	.domain([0, d3.max(data, function(d) { return d[2]; })])
 	.range([ 0, padding ]);
 
-var chart = d3.select('body')
+var chart = d3.select('#content')
 	.append('svg:svg')
 	.attr('width', width + margin.right + margin.left)
 	.attr('height', height + margin.top + margin.bottom)
@@ -59,3 +60,5 @@ g.selectAll("circle")
 		.attr("cy", function (d) { return y(d[1]); } )
 		.attr("r", function (d) { return r(d[2]); } )
 		.attr("class", function (d) { return d[3];});
+
+//g.selectAll("circle").transition().duration(2000).attr("cy", "50%");
