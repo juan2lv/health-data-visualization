@@ -7,50 +7,55 @@ body {
   font: 10px sans-serif;
 }
 
-div {
-  padding-left: 50px;
-  padding-top: 15px;
-  width: 50%;
-  margin: 0 auto;
-  font: 14px;
+.main text {
+        font: 10px sans-serif;  
 }
 
-input {
-  border-top: 0;
-  border-left: 0;
-  border-right: 0;
-  text-align: center;
-  font: 14px;
-  width: 60px;
-}
+.axis line, .axis path {
+        shape-rendering: crispEdges;
+        stroke: black;
+        fill: none;
+    }
 
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-
+/*
 .x.axis path {
   display: none;
-}
+}*/
 
 .line {
   fill: none;
   stroke-width: 1.5px;
 }
 
+.ICD10-00 {
+    stroke: steelblue;
+}
+
+.ICD10-01 {
+    stroke: pink;
+}
+
 </style>
 <body>
-  <div>
-    Number of Lines:
-    <input id="linecount" name="lines" value="7" onkeyup="render()"></input>
-    Points per Line:
-    <input id="pointcount" name="points" value="3" onkeyup="render()"></input>
-  </div>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
-
+dataset = [[
+            {"code": "ICD10-00",
+            "rate": [{x:5,y:2}, {x:10,y:6}, {x:15,y:8}, {x:20,y:7}, {x:25,y:10}, {x:30,y:20}]
+            },
+            {"code": "ICD10-01",
+            "rate": [{x:5,y:1}, {x:10,y:5}, {x:15,y:7}, {x:20,y:10}, {x:25,y:15}, {x:30,y:30}]
+            }
+        ],
+        [
+            {"code": "ICD10-00",
+            "rate": [{x:5,y:1}, {x:10,y:6}, {x:15,y:8}, {x:20,y:7}, {x:25,y:10}, {x:30,y:20}]
+            },
+            {"code": "ICD10-01",
+            "rate": [{x:5,y:2}, {x:10,y:5}, {x:15,y:7}, {x:20,y:8}, {x:25,y:12}, {x:30,y:18}]
+            }
+        ]];
+/*
 dataset = [
             [
               [{x:5,y:2}, {x:10,y:6}, {x:15,y:8}, {x:20,y:7}, {x:25,y:10}, {x:30,y:20}],
@@ -61,7 +66,8 @@ dataset = [
               [{x:5,y:2}, {x:10,y:5}, {x:15,y:7}, {x:20,y:8}, {x:25,y:12}, {x:30,y:18}]
             ]
           ];
-
+*/
+/*
 var width = 960,
     height = 500-37;
 
@@ -77,15 +83,82 @@ var svg = d3.select("body").append("svg")
 var xScale = d3.scale.linear().domain([0,30])
       .range([0,width - margin.left - margin.right]);
 
-var yScale = d3.scale.linear()
+var yScale = d3.scale.linear().domain([0,30])
       .range([height - margin.top - margin.bottom,0]);
+
+// draw the x axis
+var xAxis = d3.svg.axis()
+  .scale(xScale)
+  .orient('bottom');
+
+svg.append('g')
+  .attr('transform', 'translate(0,' + height + ')')
+  .attr('class', 'main axis')
+  .call(xAxis);
+
+// draw the y axis
+var yAxis = d3.svg.axis()
+  .scale(yScale)
+  .orient('left');
+
+svg.append('g')
+  .attr('transform', 'translate(0,0)')
+  .attr('class', 'main axis')
+  .call(yAxis);
+*/
+
+var margin = {top: 20, right: 15, bottom: 60, left: 60}
+  , width = 1000 - margin.left - margin.right
+  , height = 580 - margin.top - margin.bottom;
+
+var padding = 50;
+
+var xScale = d3.scale.linear()
+  .domain([0, 30])
+  .range([ 0, width ]);
+
+var yScale = d3.scale.linear()
+  .domain([0, 30])
+  .range([ height, 0 ]);
+
+var chart = d3.select('body')
+  .append('svg:svg')
+  .attr('width', width + margin.right + margin.left)
+  .attr('height', height + margin.top + margin.bottom)
+  .attr('class', 'chart')
+
+var main = chart.append('g')
+  .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+  .attr('width', width)
+  .attr('height', height)
+  .attr('class', 'main')   
+      
+// draw the x axis
+var xAxis = d3.svg.axis()
+  .scale(xScale)
+  .orient('bottom');
+
+main.append('g')
+  .attr('transform', 'translate(0,' + height + ')')
+  .attr('class', 'main axis date')
+  .call(xAxis);
+
+// draw the y axis
+var yAxis = d3.svg.axis()
+  .scale(yScale)
+  .orient('left');
+
+main.append('g')
+  .attr('transform', 'translate(0,0)')
+  .attr('class', 'main axis date')
+  .call(yAxis);
 
 var line = d3.svg.line().interpolate("monotone")
   .x(function(d){ return xScale(d.x); })
   .y(function(d){ return yScale(d.y); });
 
 // create random data
-
+/*
 function newData(lineNumber, points){
   return d3.range(lineNumber).map(function(){
     return d3.range(points).map(function(item,idx){
@@ -93,7 +166,7 @@ function newData(lineNumber, points){
     });
   });
 }
-
+*/
 var count = 0;
 
 function render(){
@@ -101,32 +174,13 @@ function render(){
   //var data = newData(+document.getElementById("linecount").value,+document.getElementById("pointcount").value);
   var data = dataset[count%2];
   console.log(JSON.stringify(data));
+
   
 
-  // obtain absolute min and max
-  var yMin = data.reduce(function(pv,cv){
-    var currentMin = cv.reduce(function(pv,cv){
-      return Math.min(pv,cv.y);
-    },100)
-    return Math.min(pv,currentMin);
-  },100);
-  var yMax = data.reduce(function(pv,cv){
-    var currentMax = cv.reduce(function(pv,cv){
-      return Math.max(pv,cv.y);
-    },0)
-    return Math.max(pv,currentMax);
-  },0);
-
-  // set domain for axis
-  yScale.domain([yMin,yMax]);
-
-  // create axis scale
-  var yAxis = d3.svg.axis()
-      .scale(yScale).orient("left");
-
-  var xAxis = d3.svg.axis()
-  .scale(xScale)
-  .orient('bottom');
+/*
+  svg.append("g")
+        .attr("class","x axis")
+        .call(xAxis);
 
   // if no axis exists, create one, otherwise update it
   if (svg.selectAll(".y.axis")[0].length < 1 ){
@@ -134,35 +188,25 @@ function render(){
         .attr("class","y axis")
         .call(yAxis);
 
-    svg.append("g")
-        .attr("class","x axis")
-        .call(xAxis);
   } else {
     svg.selectAll(".y.axis").transition().duration(1500).call(yAxis);
   }
-
-  // generate line paths
-  var lines = svg.selectAll(".line").data(data).attr("class","line");
-
-  // transition from previous paths to new paths
-  lines.transition().duration(1500)
-    .attr("d",line)
-    .style("stroke", function(){
-      return '#'+Math.floor(Math.random()*16777215).toString(16);
-    });
-    
-  // enter any new data
-  lines.enter()
-    .append("path")
-    .attr("class","line")
-    .attr("d",line)
-    .style("stroke", function(){
-      return '#'+Math.floor(Math.random()*16777215).toString(16);
-    });
-
-  // exit
-  lines.exit()
-    .remove();
+*/
+  var lines = main.selectAll(".line").data(data);
+ 
+// transition from previous paths to new paths
+lines.transition().duration(1500)
+  .attr("d",function (d) { return line(d.rate)});
+ 
+// enter any new lines
+lines.enter()
+  .append("path")
+  .attr("class","line")
+  .attr("d", function (d) { return line(d.rate)})
+  .attr("class",function (d) { return "line "+d.code});
+ 
+// exit
+lines.exit().remove();
 
   count++;
 }
@@ -172,6 +216,7 @@ render();
 
 // continuous page render
 setInterval(render, 1500);
+
 
 </script>
 </body>
