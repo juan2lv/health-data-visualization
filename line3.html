@@ -35,6 +35,12 @@ body {
     stroke: pink;
 }
 
+.dot {
+  fill: white;
+  stroke: gray;
+  stroke-width: 1.5px;
+}
+
 </style>
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
@@ -173,7 +179,7 @@ function render(){
   // generate new data
   //var data = newData(+document.getElementById("linecount").value,+document.getElementById("pointcount").value);
   var data = dataset[count%2];
-  console.log(JSON.stringify(data));
+  //console.log(JSON.stringify(data));
 
   
 
@@ -204,6 +210,26 @@ lines.enter()
   .attr("class","line")
   .attr("d", function (d) { return line(d.rate)})
   .attr("class",function (d) { return "line "+d.code});
+
+var dotsdata = [];
+for (var i = 0; i < data.length; i++) {
+    dotsdata = dotsdata.concat(data[i].rate);
+};
+
+dots = main.selectAll(".dot").data(dotsdata);
+    
+    dots.transition().duration(1500)
+    .attr("cx", function (d) { return xScale(d.x)})
+    .attr("cy", function (d) { return yScale(d.y)})
+    .attr("r", 3.5);
+
+    dots.enter().append("circle")
+    .attr("class", "dot")
+    .attr("cx", function (d) { return xScale(d.x)})
+    .attr("cy", function (d) { return yScale(d.y)})
+    .attr("r", 3.5);
+
+    dots.exit().remove();
  
 // exit
 lines.exit().remove();
