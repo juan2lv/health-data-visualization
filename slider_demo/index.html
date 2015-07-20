@@ -9,9 +9,14 @@
   <script>
   $(function() {
     $("#slider").slider({
-      value: 20,
+      min: 1994,
+      max: 2010,
+      value:1994,
       create: function(event, ui){
         document.getElementById("show_something").innerHTML = $("#slider").slider("option", "value");
+      },
+      change: function( event, ui ) {
+        
       }
     })
     $( "#slider" ).slider({
@@ -23,10 +28,10 @@
   </script>
 </head>
 <body>
- 
+
 <div id="slider"></div>
 <p id="show_something"></p>
- 
- 
+
+
 </body>
 </html>

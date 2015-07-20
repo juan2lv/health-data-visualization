@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>jQuery UI Slider - Default functionality</title>
+ <script  type="text/javascript" src="../d3-3.1.0/d3.min.js"></script>
+  <link rel="stylesheet" href="jquery-ui.css">
+  <script src="jquery-1.10.2.js"></script>
+  <script src="jquery-ui.js"></script>
+  <script>
+  $(function() {
+    $("#slider").slider({
+      min: 1994,
+      max: 2010,
+      value:1994,
+      create: function(event, ui){
+        document.getElementById("show_something").innerHTML = $("#slider").slider("option", "value");
+
+        var dataset = []
+        var datalink;
+        var FilePath = "../raw_data_c/";
+        var year = 1994;
+        var sexualMale = "MC.csv";
+        var sexualFemale = "FC.csv";
+        var outPutPath = FilePath + year + sexualMale;
+        d3.csv(outPutPath,function(error,csvdata){
+
+       if(error){
+         console.log(error);
+       }
+       //console.log(csvdata);
+       //ICD10,0_4,5_9,10_14,15_19,20_24,25_29,30_34,35_39,40_44,45_49,50_54,55_59,60_64,65_69,70_74,75_79,80_84,85,TOTALE
+       for( var i=0; i<csvdata.length; i++ ){
+         var contentName = csvdata[i]["ICD10"];
+         var content = [];
+         for(var j=0; j<16;++j)
+         {
+           var temp1 = j*5;
+           var temp2 = 4+j*5;
+           var tempTotal = temp1 + "_" +temp2;
+           //console.log(tempTotal);
+           content[j] = csvdata[i][tempTotal];
+         }
+         content[16] = csvdata[i]["85"];
+         var contentTotal = csvdata[i]["TOTALE"];
+
+         console.log( "ICD10: " + contentName + "\n" );
+         for(var k=0;k<16;++k)
+         {
+           var temp1 = j*5;
+           var temp2 = 4+j*5;
+           var tempTotal = temp1 + "_" +temp2;
+           console.log( tempTotal+":"+content[k] + "\n");
+         }
+         console.log( "85: " + content[16] + "\n");
+         console.log( "Total: " + contentTotal + "\n");
+          }
+
+     });
+
+
+      },
+      change: function( event, ui ) {
+
+        var dataset = []
+        var datalink;
+        var FilePath = "../raw_data_c/";
+        var year = ui.value;
+        var sexualMale = "MC.csv";
+        var sexualFemale = "FC.csv";
+        var outPutPath = FilePath + year + sexualMale;
+        d3.csv(outPutPath,function(error,csvdata){
+
+       if(error){
+         console.log(error);
+       }
+       //console.log(csvdata);
+       //ICD10,0_4,5_9,10_14,15_19,20_24,25_29,30_34,35_39,40_44,45_49,50_54,55_59,60_64,65_69,70_74,75_79,80_84,85,TOTALE
+       for( var i=0; i<csvdata.length; i++ ){
+         var contentName = csvdata[i]["ICD10"];
+         var content = [];
+         for(var j=0; j<16;++j)
+         {
+           var temp1 = j*5;
+           var temp2 = 4+j*5;
+           var tempTotal = temp1 + "_" +temp2;
+           //console.log(tempTotal);
+           content[j] = csvdata[i][tempTotal];
+         }
+         content[16] = csvdata[i]["85"];
+         var contentTotal = csvdata[i]["TOTALE"];
+
+         console.log( "ICD10: " + contentName + "\n" );
+         for(var k=0;k<16;++k)
+         {
+           var temp1 = j*5;
+           var temp2 = 4+j*5;
+           var tempTotal = temp1 + "_" +temp2;
+           console.log( tempTotal+":"+content[k] + "\n");
+         }
+         console.log( "85: " + content[16] + "\n");
+         console.log( "Total: " + contentTotal + "\n");
+          }
+
+     });
+
+//-------------read File---------
+      }
+    })
+    $( "#slider" ).slider({
+      slide: function(event, ui){
+        document.getElementById("show_something").innerHTML = ui.value;
+      }
+    });
+
+  });
+  </script>
+</head>
+<body>
+
+<div id="slider"></div>
+<p id="show_something"></p>
+
+
+</body>
+</html>
