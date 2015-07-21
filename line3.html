@@ -7,10 +7,6 @@ body {
   font: 10px sans-serif;
 }
 
-.main text {
-        font: 10px sans-serif;  
-}
-
 .axis line, .axis path {
         shape-rendering: crispEdges;
         stroke: black;
@@ -41,9 +37,41 @@ body {
   stroke-width: 1.5px;
 }
 
+.axisLable {
+  font: 14px Arial;
+  text-anchor: middle;
+  font-weight: bold;
+}
+
+input[type="range"] {
+  width: 900px;
+  margin-left: 60px;
+}
+
+input[type="range"] ::-moz-range-thumb {
+  height: 30px;
+}
+
 </style>
 <body>
-<script src="http://d3js.org/d3.v3.min.js"></script>
+  <div id="chart"></div>
+
+  <input type="range" value="2000" min="2000" max="2010" list="number" id="yearSlider" />
+  <datalist id="number">
+    <option>2000</option> 
+    <option>2001</option> 
+    <option>2002</option> 
+    <option>2003</option> 
+    <option>2004</option>
+    <option>2005</option> 
+    <option>2006</option> 
+    <option>2007</option> 
+    <option>2008</option> 
+    <option>2009</option>
+    <option>2010</option>
+  </datalist>
+
+<script type="text/javascript" src="d3-3.1.0/d3.min.js"></script>
 <script>
 dataset = [[
             {"code": "ICD10-00",
@@ -127,7 +155,7 @@ var yScale = d3.scale.linear()
   .domain([0, 30])
   .range([ height, 0 ]);
 
-var chart = d3.select('body')
+var chart = d3.select('#chart')
   .append('svg:svg')
   .attr('width', width + margin.right + margin.left)
   .attr('height', height + margin.top + margin.bottom)
@@ -142,12 +170,20 @@ var main = chart.append('g')
 // draw the x axis
 var xAxis = d3.svg.axis()
   .scale(xScale)
-  .orient('bottom');
+  .orient('bottom')
+  .tickValues([0,5,10,15,20,25,30])
+  .tickFormat(function (d) { return ""+d+" - "+(d+4);});
 
 main.append('g')
   .attr('transform', 'translate(0,' + height + ')')
   .attr('class', 'main axis date')
-  .call(xAxis);
+  .call(xAxis)
+    .selectAll("text")
+    .attr("y", 10)
+    .attr("x", -8)
+    .attr("dy", "0em")
+    .attr("transform", "rotate(305)")
+    .style("text-anchor", "end");
 
 // draw the y axis
 var yAxis = d3.svg.axis()
@@ -158,6 +194,21 @@ main.append('g')
   .attr('transform', 'translate(0,0)')
   .attr('class', 'main axis date')
   .call(yAxis);
+
+main.append("text")
+        .attr("y", height + margin.bottom*2/3)
+        .attr("x", width/2)
+        .attr("dy", "1em")
+        .attr("class", "axisLable")
+        .text("Age");
+
+main.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0-margin.left+10)
+        .attr("x", 0-height/2)
+        .attr("dy", "1em")
+        .attr("class", "axisLable")
+        .text("Value");
 
 var line = d3.svg.line().interpolate("monotone")
   .x(function(d){ return xScale(d.x); })
@@ -173,12 +224,15 @@ function newData(lineNumber, points){
   });
 }
 */
-var count = 0;
+//var count = 0;
+d3.select("#yearSlider").on("input", function() {
+  render(this.value%2);
+});
 
-function render(){
+function render(inyear){
   // generate new data
   //var data = newData(+document.getElementById("linecount").value,+document.getElementById("pointcount").value);
-  var data = dataset[count%2];
+  var data = dataset[inyear];
   //console.log(JSON.stringify(data));
 
   
@@ -219,9 +273,7 @@ for (var i = 0; i < data.length; i++) {
 dots = main.selectAll(".dot").data(dotsdata);
     
     dots.transition().duration(1500)
-    .attr("cx", function (d) { return xScale(d.x)})
     .attr("cy", function (d) { return yScale(d.y)})
-    .attr("r", 3.5);
 
     dots.enter().append("circle")
     .attr("class", "dot")
@@ -234,14 +286,14 @@ dots = main.selectAll(".dot").data(dotsdata);
 // exit
 lines.exit().remove();
 
-  count++;
+  //count++;
 }
 
 // initial page render
-render();
+render(0);
 
 // continuous page render
-setInterval(render, 1500);
+//setInterval(render, 1500);
 
 
 </script>
