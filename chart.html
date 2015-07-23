@@ -2,38 +2,28 @@
 <html>
 <head>
 	<title>Data Chart</title>
-	<style>
-		.chart {
-
-		}
-
-		.main text {
-		    font: 10px sans-serif;	
-		}
-
-		.axis line, .axis path {
-		    shape-rendering: crispEdges;
-		    stroke: black;
-		    fill: none;
-		}
-
-		.ICD10 {
-		    fill: steelblue;
-		}
-
-		.ICD9 {
-		    fill: pink;
-		}
-	</style>
+	<link rel="stylesheet" type="text/css" href="chart.css" />
 	<script type="text/javascript" src="d3-3.1.0/d3.min.js"></script>
+	<script type="text/javascript" src="jquery-2.1.4.min.js"></script>
+	<script type="text/javascript" src="chart.js"></script>
 </head>
 <body>
 	<div id='content'>
       <!-- /the chart goes here -->
     </div>
-    <button id="animate">click me</button>
-    <script type="text/javascript" src="scatterchart.js"></script>
-    <script type="text/javascript">
-    </script>
+    <input type="range" value="2000" min="2000" max="2010" list="number" id="yearSlider" />
+	<datalist id="number">
+		<option>2000</option> 
+		<option>2001</option> 
+		<option>2002</option> 
+		<option>2003</option> 
+		<option>2004</option>
+		<option>2005</option> 
+		<option>2006</option> 
+		<option>2007</option> 
+		<option>2008</option> 
+		<option>2009</option>
+		<option>2010</option>
+	</datalist>
 </body>
 </html>

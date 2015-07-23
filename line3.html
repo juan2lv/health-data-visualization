@@ -2,6 +2,9 @@
 <meta charset="utf-8">
 <html>
 <style>
+* {
+
+}
 
 body {
   font: 10px sans-serif;
@@ -12,11 +15,6 @@ body {
         stroke: black;
         fill: none;
     }
-
-/*
-.x.axis path {
-  display: none;
-}*/
 
 .line {
   fill: none;
@@ -31,8 +29,14 @@ body {
     stroke: pink;
 }
 
-.dot {
+.femaledot {
   fill: white;
+  stroke: gray;
+  stroke-width: 1.5px;
+}
+
+.maledot {
+  fill: gray;
   stroke: gray;
   stroke-width: 1.5px;
 }
@@ -46,10 +50,7 @@ body {
 input[type="range"] {
   width: 900px;
   margin-left: 60px;
-}
-
-input[type="range"] ::-moz-range-thumb {
-  height: 30px;
+  margin-top: 50px;
 }
 
 </style>
@@ -261,30 +262,52 @@ lines.transition().duration(1500)
 // enter any new lines
 lines.enter()
   .append("path")
-  .attr("class","line")
-  .attr("d", function (d) { return line(d.rate)})
-  .attr("class",function (d) { return "line "+d.code});
+  .attr("d", function (d) { return line(d.rate);})
+  .attr("class",function (d) { return "line "+d.code;});
 
 var dotsdata = [];
 for (var i = 0; i < data.length; i++) {
     dotsdata = dotsdata.concat(data[i].rate);
 };
 
-dots = main.selectAll(".dot").data(dotsdata);
-    
-    dots.transition().duration(1500)
-    .attr("cy", function (d) { return yScale(d.y)})
+var fdots = main.selectAll(".femaledot").data(data[0].rate);
+var mdots = main.selectAll(".maledot").data(data[1].rate);
 
-    dots.enter().append("circle")
-    .attr("class", "dot")
-    .attr("cx", function (d) { return xScale(d.x)})
-    .attr("cy", function (d) { return yScale(d.y)})
+
+    
+    fdots.transition().duration(1500)
+    .attr("cy", function (d) { return yScale(d.y);});
+
+    mdots.transition().duration(1500)
+    .attr("cy", function (d) { return yScale(d.y);});
+
+
+    fdots.enter().append("circle")
+    .attr("class", "femaledot")
+    .attr("cx", function (d) { return xScale(d.x);})
+    .attr("cy", function (d) { return yScale(d.y);})
     .attr("r", 3.5);
 
-    dots.exit().remove();
+    mdots.enter().append("circle")
+    .attr("class", "maledot")
+    .attr("cx", function (d) { return xScale(d.x);})
+    .attr("cy", function (d) { return yScale(d.y);})
+    .attr("r", 3.5);
+
+var yearLabel = main.selectAll(".yearLabel").data([""]);
+yearLabel.transition().text(""+inyear);
+yearLabel.enter().append("text")
+  .attr("class", "yearLabel")
+  .attr("x", margin.left+20)
+  .attr("y", margin.top+20)
+  .text(""+inyear)
+
  
 // exit
 lines.exit().remove();
+fdots.exit().remove();
+mdots.exit().remove();
+yearLabel.exit().remove();
 
   //count++;
 }
