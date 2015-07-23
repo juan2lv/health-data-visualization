@@ -8,6 +8,8 @@
   <script src="jquery-1.10.2.js"></script>
   <script src="jquery-ui.js"></script>
   <script>
+  var Lock = 1;//deliver locl
+
   $(function() {
     $("#slider").slider({
       min: 1994,
@@ -15,96 +17,10 @@
       value:1994,
       create: function(event, ui){
         document.getElementById("show_something").innerHTML = $("#slider").slider("option", "value");
-
-        var dataset = []
-        var datalink;
-        var FilePath = "../raw_data_c/";
-        var year = 1994;
-        var sexualMale = "MC.csv";
-        var sexualFemale = "FC.csv";
-        var outPutPath = FilePath + year + sexualMale;
-        d3.csv(outPutPath,function(error,csvdata){
-
-       if(error){
-         console.log(error);
-       }
-       //console.log(csvdata);
-       //ICD10,0_4,5_9,10_14,15_19,20_24,25_29,30_34,35_39,40_44,45_49,50_54,55_59,60_64,65_69,70_74,75_79,80_84,85,TOTALE
-       for( var i=0; i<csvdata.length; i++ ){
-         var contentName = csvdata[i]["ICD10"];
-         var content = [];
-         for(var j=0; j<16;++j)
-         {
-           var temp1 = j*5;
-           var temp2 = 4+j*5;
-           var tempTotal = temp1 + "_" +temp2;
-           //console.log(tempTotal);
-           content[j] = csvdata[i][tempTotal];
-         }
-         content[16] = csvdata[i]["85"];
-         var contentTotal = csvdata[i]["TOTALE"];
-
-         console.log( "ICD10: " + contentName + "\n" );
-         for(var k=0;k<16;++k)
-         {
-           var temp1 = j*5;
-           var temp2 = 4+j*5;
-           var tempTotal = temp1 + "_" +temp2;
-           console.log( tempTotal+":"+content[k] + "\n");
-         }
-         console.log( "85: " + content[16] + "\n");
-         console.log( "Total: " + contentTotal + "\n");
-          }
-
-     });
-
-
+        //console.log(dataset);
+          readfile();
       },
       change: function( event, ui ) {
-
-        var dataset = []
-        var datalink;
-        var FilePath = "../raw_data_c/";
-        var year = ui.value;
-        var sexualMale = "MC.csv";
-        var sexualFemale = "FC.csv";
-        var outPutPath = FilePath + year + sexualMale;
-        d3.csv(outPutPath,function(error,csvdata){
-
-       if(error){
-         console.log(error);
-       }
-       //console.log(csvdata);
-       //ICD10,0_4,5_9,10_14,15_19,20_24,25_29,30_34,35_39,40_44,45_49,50_54,55_59,60_64,65_69,70_74,75_79,80_84,85,TOTALE
-       for( var i=0; i<csvdata.length; i++ ){
-         var contentName = csvdata[i]["ICD10"];
-         var content = [];
-         for(var j=0; j<16;++j)
-         {
-           var temp1 = j*5;
-           var temp2 = 4+j*5;
-           var tempTotal = temp1 + "_" +temp2;
-           //console.log(tempTotal);
-           content[j] = csvdata[i][tempTotal];
-         }
-         content[16] = csvdata[i]["85"];
-         var contentTotal = csvdata[i]["TOTALE"];
-
-         console.log( "ICD10: " + contentName + "\n" );
-         for(var k=0;k<16;++k)
-         {
-           var temp1 = j*5;
-           var temp2 = 4+j*5;
-           var tempTotal = temp1 + "_" +temp2;
-           console.log( tempTotal+":"+content[k] + "\n");
-         }
-         console.log( "85: " + content[16] + "\n");
-         console.log( "Total: " + contentTotal + "\n");
-          }
-
-     });
-
-//-------------read File---------
       }
     })
     $( "#slider" ).slider({
@@ -114,13 +30,257 @@
     });
 
   });
+
+  var datasetMale = [];
+  var datasetFemale = [];
+  var maxMale = [];
+  var maxFemale = [];
+  var codeArray = [];
+  var dictionary = [];//for all code dictionary
+  var fullNameCode = [];
+  function readfile(){
+    var FilePath = "../raw_data_c/";
+    var Male = "MC.csv";
+    var Female = "FC.csv";
+
+    //var year = 1994;
+
+
+  for(var year=1994;year<2011;year++)
+  {
+    var outPutPath = FilePath + year + Male;
+    d3.csv(outPutPath,function(error,csvdata){
+   var ArrayForOneTable = [];
+   var CodeForOneTable = [];
+   if(error){
+     console.log(error);
+   }
+   var MaxValue = 0;
+   for( var i=0; i<csvdata.length; i++ ){
+
+     var contentName = csvdata[i]["ICD10"];
+     var ObjectForOneRows = new Object();
+     dictionary.push(contentName);
+     ObjectForOneRows.code = contentName.substr(0,contentName.indexOf(" "));
+     CodeForOneTable.push(ObjectForOneRows.code);
+     var content = [];
+     for(var j=0; j<16;++j)
+     {
+       var ObjectForLocationXandY = new Object();
+       var temp1 = j*5;
+       var temp2 = 4+j*5;
+       var tempTotal = temp1 + "_" +temp2;
+       //console.log(tempTotal);
+       ObjectForLocationXandY.y   = parseInt(csvdata[i][tempTotal]);
+
+       if(ObjectForLocationXandY.y>MaxValue)
+       MaxValue = ObjectForLocationXandY.y;
+
+       ObjectForLocationXandY.x   = temp1;
+       content.push(ObjectForLocationXandY);
+     }
+     ObjectForLocationXandY.y   = parseInt(csvdata[i]["85"]);
+     ObjectForLocationXandY.x   = 85;
+     content.push(ObjectForLocationXandY);
+     //console.log(content);
+     ObjectForOneRows.rate = content;
+     ArrayForOneTable.push(ObjectForOneRows);
+
+     content = [];
+      }
+      datasetMale.push(ArrayForOneTable);
+
+
+      //if(datasetMale.length==17)
+      //console.log(datasetMale);
+
+      //console.log(MaxValue);
+      //console.log(CodeForOneTable.length);
+      codeArray.push(CodeForOneTable);
+      maxMale.push(MaxValue);
+    });
+  }
+
+  for(var year=1994;year<2011;year++)
+  {
+
+    var outPutPath = FilePath + year + Female;
+    d3.csv(outPutPath,function(error,csvdata){
+   var ArrayForOneTable = [];
+   var CodeForOneTable = [];
+   var MaxValue = 0;
+   if(error){
+     console.log(error);
+   }
+
+   for( var i=0; i<csvdata.length; i++ ){
+     var contentName = csvdata[i]["ICD10"];
+     var ObjectForOneRows = new Object();
+     dictionary.push(contentName);
+     ObjectForOneRows.code = contentName.substr(0,contentName.indexOf(" "));
+     CodeForOneTable.push(ObjectForOneRows.code);
+     var content = [];
+     for(var j=0; j<16;++j)
+     {
+       var ObjectForLocationXandY = new Object();
+       var temp1 = j*5;
+       var temp2 = 4+j*5;
+       var tempTotal = temp1 + "_" +temp2;
+       //console.log(tempTotal);
+       ObjectForLocationXandY.y   = parseInt(csvdata[i][tempTotal]);
+       ObjectForLocationXandY.x   = temp1;
+       if(ObjectForLocationXandY.y>MaxValue)
+       MaxValue = ObjectForLocationXandY.y;
+       content.push(ObjectForLocationXandY);
+     }
+     ObjectForLocationXandY.y   = parseInt(csvdata[i]["85"]);
+     ObjectForLocationXandY.x   = 85;
+     content.push(ObjectForLocationXandY);
+     //console.log(content);
+     ObjectForOneRows.rate = content;
+     ArrayForOneTable.push(ObjectForOneRows);
+
+     content = [];
+      }
+      datasetFemale.push(ArrayForOneTable);
+
+
+      //if(datasetFemale.length==17)
+      //console.log(datasetFemale);
+      codeArray.push(CodeForOneTable);
+      //console.log(MaxValue);
+      maxFemale.push(MaxValue);
+    });
+
+  }
+
+
+  setInterval(
+    function(){
+      if(datasetMale.length>0&&datasetFemale.length>0){
+
+        //  -----------y index max calculation-------------
+        if(maxFemale.length>0&&maxMale.length>0&&Lock==1){
+        yIndexMax = Math.max.apply(null,maxFemale.concat(maxMale));
+        console.log(yIndexMax);
+        Lock++;
+        };
+
+        var resultArray = codeArray[0];// the unique code in table
+        if(codeArray.length>0)
+        {
+          if(Lock==2)
+          {
+            for(var i=1;i<(codeArray.length);++i)
+            {
+              var tempArray = [];
+              for(var j=0;j<resultArray.length;++j)
+              {
+                for(var k=0;k<codeArray[i].length;++k)
+                {
+                  if(resultArray[j]==codeArray[i][k])
+                  {
+                    tempArray.push(codeArray[i][k]);
+                  }
+                }
+              }
+              resultArray = tempArray;
+            }
+            console.log(resultArray);
+            Lock++;
+          }
+
+          ///----------datasetMale processing------------
+          if(Lock==3)
+          {
+            for(var i=0;i<datasetMale.length;i++)
+            {
+              for(var j=0;j<datasetMale[i].length;j++)
+              {
+                  var flag = 1;
+                  for(var k=0;k<resultArray.length;k++)
+                  {
+                    if(datasetMale[i][j].code==resultArray[k]){
+                      flag = 0;
+                    }
+                  }
+                  if(flag)
+                  {
+                    datasetMale[i].splice(j,1);
+                    j = -1;
+                  }
+              }
+
+            }
+            Lock++;
+          }
+
+          if(Lock==4)
+          {
+            for(var i=0;i<datasetFemale.length;i++)
+            {
+              for(var j=0;j<datasetFemale[i].length;j++)
+              {
+                  var flag = 1;
+                  for(var k=0;k<resultArray.length;k++)
+                  {
+                    if(datasetFemale[i][j].code==resultArray[k]){
+                      flag = 0;
+                    }
+                  }
+                  if(flag)
+                  {
+                    datasetFemale[i].splice(j,1);
+                    j = -1;
+                  }
+              }
+
+            }
+            Lock++;//end the lock
+          }
+
+          if(Lock==5){
+            //combine the whole dictionary
+            for(var i = 0;i<dictionary.length;++i){
+              for(var j = i+1;j<dictionary.length;++j){
+                if(dictionary[i]==dictionary[j]){
+                  dictionary.splice(j,1);
+                }
+              }
+            }
+
+            for(var i=0;i<dictionary.length;++i)
+            {
+              for(var j=0;j<resultArray.length;++j)
+              {
+                if(dictionary[i].substr(0,dictionary[i].indexOf(" "))==resultArray[j])
+                {
+                  fullNameCode.push(dictionary[i]);
+                }
+
+              }
+            }
+
+
+            Lock = 0;
+          }
+
+
+        }
+
+      }
+
+    }
+    ,1000);
+
+
+}
+
   </script>
 </head>
 <body>
-
 <div id="slider"></div>
 <p id="show_something"></p>
-
 
 </body>
 </html>
