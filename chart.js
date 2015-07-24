@@ -443,6 +443,22 @@ function appendCheckbox () {
         getCheck_state();
         render(cyear);
     })
+
+    // I know this is urgly, but I'm lazy to change it.
+    for(i=0;i<elems.length;i++){
+    document.getElementById("checker_"+i).onchange = function(){
+      var num = (this.id).substr((this.id).indexOf("_")+1,(this.id).length);
+      if(document.getElementById(this.id).checked){
+        
+        document.getElementById("disease_"+num).style.color = label_color[num];
+        document.getElementById("show").innerHTML = current_state;
+      }
+      else{
+        document.getElementById("disease_"+num).style.color = "gray";
+        document.getElementById("show").innerHTML = current_state;
+      }
+    };
+  }
 }
 
 function getCheck_state () {
@@ -477,7 +493,7 @@ function create_disease_list(diseases){
       checker.setAttribute("name", "checkboxgroup");
       checker.checked = true;
       disease_label.setAttribute("id", label_id);
-      disease_label.setAttribute("style", "color: gray; width: 250px; margin-left: 3px; float: left;");
+      disease_label.setAttribute("style", "color: "+label_color[i]+"; width: 250px; margin-left: 3px; float: left;");
       disease_li.setAttribute("class", "loda-btn");
       disease_li.setAttribute("style", "margin-top: 12px; width: 288px; padding: 2px;")
 
