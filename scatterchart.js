@@ -9,11 +9,11 @@ var padding = 50;
 
 var x = d3.scale.linear()
 	.domain([0, d3.max(datas[0], function (d) { return d[0]; })])
-	.range([ padding, width-50 ]);
+	.range([ 0, width ]);
 
 var y = d3.scale.linear()
 	.domain([0, d3.max(datas[0], function(d) { return d[1]; })])
-	.range([ height-padding, padding ]);
+	.range([ height, 0 ]);
 
 var r = d3.scale.linear()
 	.domain([0, d3.max(datas[0], function(d) { return d[2]; })])
@@ -34,7 +34,9 @@ var main = chart.append('g')
 // draw the x axis
 var xAxis = d3.svg.axis()
 	.scale(x)
-	.orient('bottom');
+	.orient('bottom')
+	.tickValues([0,5,10,15])
+	.tickFormat(function (d) { return ""+d+" - "+(d+4);});
 
 main.append('g')
 	.attr('transform', 'translate(0,' + height + ')')
@@ -51,11 +53,12 @@ main.append('g')
 	.attr('class', 'main axis date')
 	.call(yAxis);
 
-var g = main.append("svg:g"); 
+/*
 
 update(datas[0]);
 
 function update(data) {
+	var g = main.append("svg:g"); 
 	var circles = g.selectAll("circle").data(data);
 	var circlesEnter = circles.enter().append("circle")
 		.attr("cx", function (d) { return x(d[0]); } )
@@ -76,7 +79,7 @@ document.getElementById('animate').addEventListener('click', function () {
 	console.log(i);
 })
 
-
+*/
 
 
 //g.selectAll("circle").transition().duration(2000).attr("cy", "50%");

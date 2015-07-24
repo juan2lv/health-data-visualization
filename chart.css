@@ -45,6 +45,12 @@ body {
 	font-weight: bold;
 }
 
+#checkbox_div {
+	font-size: 16px;
+	font-family: "Times New Roman", Georgia, Serif;
+	font-weight: bold;
+}
+
 input[type="range"] {
 	width: 900px;
 	margin-left: 60px;

@@ -1,0 +1,203 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<link rel="stylesheet" href="dist/switchery.css" />
+	<link rel="stylesheet" type="text/css" href="dist/loda-button.css">
+	<script src="dist/switchery.js"></script>
+</head>
+<body>
+	<div id="checkbox_div"> </div>
+	<script type="text/javascript">
+	var disease_index = [
+		"C07-C07.9",
+		"C15-C15.9",
+		"C16-C16.9",
+		"C17-C17.9",
+		"C18-C18.9",
+		"C19-C19.9",
+		"C20-C20.9",
+		"C21-C21.9",
+		"C22-C22.9",
+		"C23-C23.9",
+		"C24-C24.9",
+		"C25-C25.9",
+		"C32-C32.9",
+		"C34-C34.9",
+		"C43-C43.9",
+		"C44-C44.9",
+		"C48-C48.9",
+		"C49-C49.9",
+		"C50-C50.9",
+		"C64-C64.9",
+		"C67-C67.9",
+		"C69-C69.9",
+		"C71-C71.9",
+		"C73-C73.9",
+		"C80-C80.9",
+		"C81-C81.9",
+		"C82-C82.9",
+		"C83-C83.9",
+		"C85-C85.9",
+		"C88-C88.9",
+		"C90-C90.9",
+		"C91-C91.9",
+		"C92-C92.9",
+		"C96-C96.9"
+	];
+	function create_disease_list(diseases){
+		var container = document.createElement("div");
+		var disease_list = document.createElement("ul");
+
+		container.setAttribute("style", "width: 300px; margin: 0px; border: 0px; float: left;");
+		disease_list.setAttribute("style", "width: 300px; margin: 0px;");
+
+		container.setAttribute("id", "container");
+		disease_list.setAttribute("id", "list");	
+		for(i=0;i<diseases.length;i++){
+			var label_id = "disease_" + i;
+			var checker_id = "checker_" + i;
+
+			var disease_li = document.createElement("li");
+			var disease_label = document.createElement("label");
+			var checker = document.createElement("input");
+
+			checker.setAttribute("type", "checkbox");
+			checker.setAttribute("class", "js-switch");
+			checker.setAttribute("id", checker_id);
+			checker.setAttribute("style", "width: 60px; float: left;");
+			checker.setAttribute("value", disease_index[i]);
+			checker.setAttribute("name", "checkboxgroup");
+			checker.checked = true;
+			disease_label.setAttribute("id", label_id);
+			disease_label.setAttribute("style", "color: gray; width: 250px; margin-left: 3px; float: left;");
+			disease_li.setAttribute("class", "loda-btn");
+			disease_li.setAttribute("style", "margin-top: 12px; width: 288px; padding: 2px;")
+
+			disease_label.appendChild(document.createTextNode(diseases[i]));
+			disease_li.appendChild(disease_label);
+			disease_li.appendChild(checker);
+			disease_list.appendChild(disease_li);
+		}
+
+		container.appendChild(disease_list);
+		document.getElementById("checkbox_div").appendChild(container);
+	}
+
+	var diseases = ["Parotide",
+					"Esofago",
+					"Stomaco",
+					"Piccolo intestino",
+					"Colon",
+					"Giunz. rettosigmoidea",
+					"Retto",
+					"Ano e canale anale",
+					"Fegato dotti intraepatici",
+					"Colecisti",
+					"Altre ns parti vie biliari",
+					"Pancreas",
+					"Laringe",
+					"Bronchi e polmoni",
+					"Melanoma della pelle",
+					"Pelle non melanomi",
+					"Retroperit.peritoneo",
+					"Tess.connettivo e molle",
+					"Mammella",
+					"Rene eccet.pelvi renale",
+					"Vescica",
+					"Occhio e annessi",
+					"Cervello",
+					"Ghiandola tiroide",
+					"T.m.n.a.s. o n.s.prim.sec.",
+					"Malattia di Hodgkin",
+					"Linfoma follicol.non-Hodgkin",
+					"Linfoma diffuso non-Hodgkin",
+					"Al.n.s.linfomi non-Hodgkin",
+					"Mal.immunoprolifer.maligna",
+					"Mieloma multipl.t.m.plasmacellule",
+					"Leucemia linfoide",
+					"Leucemia mieloide",
+					"Al. ns t.m.tess.linf.emat."];
+	create_disease_list(diseases);
+	
+		var label_color = [
+		"#6699FF",
+		"#00FF99",
+		"#FF9933",
+		"#6600CC",
+		"#CC6666",
+		"#FF99FF",
+		"#5CFFAD",
+		"#CC99FF",
+		"#9999FF",
+		"#FFFF99",
+		"#FFCC00",
+		"#48488E",
+		"#3DB1FF",
+		"#FFAF7A",
+		"#9933FF",
+		"#33FF99",
+		"#FF9933",
+		"#8FFFFF",
+		"#CCFFFF",
+		"#FFFF66",
+		"#99FF66",
+		"#CC99FF",
+		"#66FFFF",
+		"#99CC00",
+		"#009933",
+		"#33CCCC",
+		"#0033CC",
+		"#CC33FF",
+		"#FF99FF",
+		"#666699",
+		"#990099",
+		"#009999",
+		"#000099",
+		"#CC6600"
+		];
+	var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+	elems.forEach(function(html){
+		var init = new Switchery(html, {size: "small"});
+	});
+
+
+	var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+
+	var check_state = [];
+	var current_state = "";
+	for(i=0;i<disease_index;i++){
+		check_state = 0;
+	}
+
+	for(i=0;i<elems.length;i++){
+		document.getElementById("checker_"+i).onchange = function(){
+			var num = (this.id).substr((this.id).indexOf("_")+1,(this.id).length);
+			if(document.getElementById(this.id).checked){
+				
+				document.getElementById("disease_"+num).style.color = label_color[num];
+				check_state[num] = 1;
+				current_state = "";
+				for(state in check_state){
+					if(check_state[state] == 1){
+						current_state += (disease_index[state]+" ");
+					}
+				}
+				document.getElementById("show").innerHTML = current_state;
+			}
+			else{
+				document.getElementById("disease_"+num).style.color = "gray";
+				check_state[num] = 0;
+				current_state = "";
+				for(state in check_state){
+					if(check_state[state] == 1){
+						current_state += (disease_index[state]+" ");
+					}
+				}
+				document.getElementById("show").innerHTML = current_state;
+			}
+		};
+	}
+	</script>
+	<p id="show" style="float:right;"></p>
+</body>
+</html>

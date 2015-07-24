@@ -1,41 +1,82 @@
 <!DOCTYPE html>
 <html>
-<head><title>line</title></head>
-<body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
-<script>
-var lineData1 = [ { "x": 1,   "y": 5},  { "x": 20,  "y": 20},
-                 { "x": 40,  "y": 10}, { "x": 60,  "y": 40},
-                 { "x": 80,  "y": 5},  { "x": 100, "y": 60}];
-var lineData2 = [ { "x": 1,   "y": 5},  { "x": 20,  "y": 20},
-                 { "x": 40,  "y": 10}, { "x": 60,  "y": 40},
-                 { "x": 80,  "y": 5},  { "x": 100, "y": 60}];
+<head>
+    <title>line</title>
+    <style>
+        .ICD10-00 {
+            stroke: steelblue;
+        }
 
-updata(lineData1);
+        .ICD10-01 {
+            stroke: pink;
+        }
+    </style>
+</head>
+<body>
+  <p id="datacontainer"></p>
+  <button id="prtdata">click</button>
+  <script type="text/javascript" src="jquery-2.1.4.min.js"></script>
+  <script type="text/javascript" src="d3-3.1.0/d3.min.js"></script>
+<script>
+
+dataset = { "y2000": 
+                [
+                    {"code": "ICD10-00",
+                    "rate": [ { "x": 5,   "y": 5},  { "x": 10,  "y": 20}, { "x": 15,  "y": 10}, { "x": 20,  "y": 40}, { "x": 25,  "y": 5}]
+                    },
+                    {"code": "ICD10-01",
+                    "rate": [ { "x": 5,   "y": 6},  { "x": 10,  "y": 25}, { "x": 15,  "y": 15}, { "x": 20,  "y": 45}, { "x": 25,  "y": 10}]
+                    }
+                ],
+            "y2001":
+                [
+                    {"code": "ICD10-00",
+                    "rate": [ { "x": 5,   "y": 3},  { "x": 10,  "y": 18}, { "x": 15,  "y": 8}, { "x": 20,  "y": 35}, { "x": 25,  "y": 10}]
+                    },
+                    {"code": "ICD10-01",
+                    "rate": [ { "x": 5,   "y": 5},  { "x": 10,  "y": 20}, { "x": 15,  "y": 10}, { "x": 20,  "y": 30}, { "x": 25,  "y": 8}]
+                    }
+                ]
+        };
+
+
+updata(dataset.y2000);
 
 function updata(data) {
-  var lineFunction = d3.svg.line()
+    
+    var lineFunction = d3.svg.line()
                          .x(function(d) { return d.x; })
                          .y(function(d) { return d.y; })
                          .interpolate("basis");
 
-//The SVG Container
-var svgContainer = d3.select("body").append("svg:svg")
-                                    .attr("width", 200)
-                                    .attr("height", 200);
+    // container
+    var svgContainer = d3.select("body").append("svg:svg")
+                                        .attr("width", 200)
+                                        .attr("height", 200);
 
-//The line SVG Path we draw
-var lineGraph = svgContainer.append("path")
-                            .attr("d", lineFunction(data))
-                            .attr("stroke", "blue")
-                            .attr("stroke-width", 2)
-                            .attr("fill", "none");
+    for (var i = 0; i < data.length; i++) {
+        //The line SVG Path we draw
+        var lineGraph = svgContainer.append("path")
+                                .attr("d", lineFunction(data[i].rate))
+                                .attr("class", data[i].code)
+                                .attr("stroke-width", 2)
+                                .attr("fill", "none");
+    }
 
 }
 
+var csvdata = [];
 
-//This is the accessor function we talked about above
+d3.csv("raw_data_c/1994FC.csv", function (data) {
+  csvdata = data;
+  console.log(JSON.stringify(csvdata));
+});
 
+$("#prtdata").click(function function_name (argument) {
+  $("#datacontainer").text(JSON.stringify(csvdata));
+});
+var str = "sofow";
+console.log(""+str.search("so"));
 
 </script>
 </body>

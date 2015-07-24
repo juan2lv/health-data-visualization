@@ -495,7 +495,7 @@ function create_disease_list(diseases){
       disease_label.setAttribute("id", label_id);
       disease_label.setAttribute("style", "color: "+label_color[i]+"; width: 250px; margin-left: 3px; float: left;");
       disease_li.setAttribute("class", "loda-btn");
-      disease_li.setAttribute("style", "margin-top: 12px; width: 288px; padding: 2px;")
+      disease_li.setAttribute("style", "margin-top: 12px; width: 288px; padding: 2px;");
 
       disease_label.appendChild(document.createTextNode(diseases[i]));
       disease_li.appendChild(disease_label);

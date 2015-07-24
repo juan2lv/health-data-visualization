@@ -8,7 +8,7 @@
   <script src="jquery-1.10.2.js"></script>
   <script src="jquery-ui.js"></script>
   <script>
-  var Lock = 1;//deliver locl
+  var Lock = 2;//deliver locl
 
   $(function() {
     $("#slider").slider({
@@ -33,138 +33,18 @@
 
   var datasetMale = [];
   var datasetFemale = [];
-  var maxMale = [];
-  var maxFemale = [];
+  var maxArray = [];
   var codeArray = [];
   var dictionary = [];//for all code dictionary
   var fullNameCode = [];
-  function readfile(){
-    var FilePath = "../raw_data_c/";
-    var Male = "MC.csv";
-    var Female = "FC.csv";
-
-    //var year = 1994;
+  var yMax ;
 
 
-  for(var year=1994;year<2011;year++)
-  {
-    var outPutPath = FilePath + year + Male;
-    d3.csv(outPutPath,function(error,csvdata){
-   var ArrayForOneTable = [];
-   var CodeForOneTable = [];
-   if(error){
-     console.log(error);
-   }
-   var MaxValue = 0;
-   for( var i=0; i<csvdata.length; i++ ){
 
-     var contentName = csvdata[i]["ICD10"];
-     var ObjectForOneRows = new Object();
-     dictionary.push(contentName);
-     ObjectForOneRows.code = contentName.substr(0,contentName.indexOf(" "));
-     CodeForOneTable.push(ObjectForOneRows.code);
-     var content = [];
-     for(var j=0; j<16;++j)
-     {
-       var ObjectForLocationXandY = new Object();
-       var temp1 = j*5;
-       var temp2 = 4+j*5;
-       var tempTotal = temp1 + "_" +temp2;
-       //console.log(tempTotal);
-       ObjectForLocationXandY.y   = parseInt(csvdata[i][tempTotal]);
-
-       if(ObjectForLocationXandY.y>MaxValue)
-       MaxValue = ObjectForLocationXandY.y;
-
-       ObjectForLocationXandY.x   = temp1;
-       content.push(ObjectForLocationXandY);
-     }
-     ObjectForLocationXandY.y   = parseInt(csvdata[i]["85"]);
-     ObjectForLocationXandY.x   = 85;
-     content.push(ObjectForLocationXandY);
-     //console.log(content);
-     ObjectForOneRows.rate = content;
-     ArrayForOneTable.push(ObjectForOneRows);
-
-     content = [];
-      }
-      datasetMale.push(ArrayForOneTable);
-
-
-      //if(datasetMale.length==17)
-      //console.log(datasetMale);
-
-      //console.log(MaxValue);
-      //console.log(CodeForOneTable.length);
-      codeArray.push(CodeForOneTable);
-      maxMale.push(MaxValue);
-    });
-  }
-
-  for(var year=1994;year<2011;year++)
-  {
-
-    var outPutPath = FilePath + year + Female;
-    d3.csv(outPutPath,function(error,csvdata){
-   var ArrayForOneTable = [];
-   var CodeForOneTable = [];
-   var MaxValue = 0;
-   if(error){
-     console.log(error);
-   }
-
-   for( var i=0; i<csvdata.length; i++ ){
-     var contentName = csvdata[i]["ICD10"];
-     var ObjectForOneRows = new Object();
-     dictionary.push(contentName);
-     ObjectForOneRows.code = contentName.substr(0,contentName.indexOf(" "));
-     CodeForOneTable.push(ObjectForOneRows.code);
-     var content = [];
-     for(var j=0; j<16;++j)
-     {
-       var ObjectForLocationXandY = new Object();
-       var temp1 = j*5;
-       var temp2 = 4+j*5;
-       var tempTotal = temp1 + "_" +temp2;
-       //console.log(tempTotal);
-       ObjectForLocationXandY.y   = parseInt(csvdata[i][tempTotal]);
-       ObjectForLocationXandY.x   = temp1;
-       if(ObjectForLocationXandY.y>MaxValue)
-       MaxValue = ObjectForLocationXandY.y;
-       content.push(ObjectForLocationXandY);
-     }
-     ObjectForLocationXandY.y   = parseInt(csvdata[i]["85"]);
-     ObjectForLocationXandY.x   = 85;
-     content.push(ObjectForLocationXandY);
-     //console.log(content);
-     ObjectForOneRows.rate = content;
-     ArrayForOneTable.push(ObjectForOneRows);
-
-     content = [];
-      }
-      datasetFemale.push(ArrayForOneTable);
-
-
-      //if(datasetFemale.length==17)
-      //console.log(datasetFemale);
-      codeArray.push(CodeForOneTable);
-      //console.log(MaxValue);
-      maxFemale.push(MaxValue);
-    });
-
-  }
-
-
+/*
   setInterval(
     function(){
       if(datasetMale.length>0&&datasetFemale.length>0){
-
-        //  -----------y index max calculation-------------
-        if(maxFemale.length>0&&maxMale.length>0&&Lock==1){
-        yIndexMax = Math.max.apply(null,maxFemale.concat(maxMale));
-        console.log(yIndexMax);
-        Lock++;
-        };
 
         var resultArray = codeArray[0];// the unique code in table
         if(codeArray.length>0)
@@ -261,8 +141,6 @@
               }
             }
 
-
-            Lock = 0;
           }
 
 
@@ -273,14 +151,86 @@
     }
     ,1000);
 
+*/
 
+function readfile(){
+    var FilePath = "../raw_data_c/";
+    csvReadFile(FilePath,1994,2010);
 }
 
+
+function csvReadFile(File,year)
+{
+    d3Csv(File,1994,"FC.csv",datasetFemale,2010);
+    d3Csv(File,1994,"MC.csv",datasetMale,2010);
+}
+
+function d3Csv(File,year,gender,dataset,breakCondition)
+{
+  var outPutPath = File + year + gender;
+  d3.csv(outPutPath,function(error,csvdata)
+  {
+    var ArrayForOneTable = [];
+    var CodeForOneTable = [];
+    if(error)
+    {
+      console.log(error);
+    }
+    var MaxValue = 0.0;
+    for( var i=0; i<csvdata.length; i++ )
+    {
+      var contentName = csvdata[i]["ICD10"];
+      var ObjectForOneRows = new Object();
+      dictionary.push(contentName);
+      ObjectForOneRows.code = contentName.substr(0,contentName.indexOf(" "));
+      CodeForOneTable.push(ObjectForOneRows.code);
+      var content = [];
+      for(var t=0; t<=17;++t)
+      {
+        var ObjectForLocationXandY = new Object();
+        var temp1 = t*5;
+        var temp2 = 4+t*5;
+        var tempTotal = temp1 + "_" +temp2;
+        //console.log(tempTotal);
+        if(t==17)
+        tempTotal = temp1;
+        ObjectForLocationXandY.y   = parseFloat(csvdata[i][tempTotal]);
+
+        if(ObjectForLocationXandY.y>MaxValue)
+        MaxValue = ObjectForLocationXandY.y;
+
+        ObjectForLocationXandY.x   = parseInt(temp1);
+        content.push(ObjectForLocationXandY);
+        //console.log(content);
+      }
+      //ObjectForLocationXandY.y   = parseFloat(csvdata[i]['85']);
+      //ObjectForLocationXandY.x   = 85;
+      //content.push(ObjectForLocationXandY);
+
+      //console.log(content);
+      ObjectForOneRows.rate = content;
+      ArrayForOneTable.push(ObjectForOneRows);
+
+      content = [];
+      }
+      dataset.push(ArrayForOneTable);
+      maxArray.push(MaxValue);
+      codeArray.push(CodeForOneTable);
+
+      if(year==breakCondition)
+      {
+        yMax = Math.max.apply(null,maxArray);
+        return ;
+      }
+      year++;
+      d3Csv(File,year,gender,dataset,breakCondition);
+  });
+
+}
   </script>
 </head>
 <body>
 <div id="slider"></div>
 <p id="show_something"></p>
-
 </body>
 </html>
