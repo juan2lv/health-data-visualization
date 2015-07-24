@@ -264,11 +264,12 @@ function render(inyear){
 		.attr("d",function (d) { return line(d.rate)});
 	 
 	// enter any new lines
+  console.log(data);
 	lines.enter()
 		.append("path")
 		.attr("class","line")
 		.attr("d", function (d) { return line(d.rate)})
-		.attr("class",function (d) { return "line "+d.code.substring(0,3)});
+		.attr("class",function (d) { console.log(d.code); return "line "+d.code.substring(0,3)});
 
 	/* TODO */
 	var femaleDotData = [];
@@ -327,8 +328,9 @@ function render(inyear){
 function getData (inData, inSelection) {
 	var outData = [];
 	for (var i = 0; i < inData.length; i++) {
-		if (inSelection.search(inData[i].code) != 0) {
-			outData.push(inData[i]);
+    outData.push({code: inData[i].code, rate: inData[i].rate });
+		if (inSelection.search(outData[i].code) == -1) {
+        outData[i].rate = [];
 		}
 	}
 	return outData;
