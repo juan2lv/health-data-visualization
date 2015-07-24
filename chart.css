@@ -1,0 +1,190 @@
+body {
+	font: 10px sans-serif;
+}
+
+.axis line, .axis path {
+	shape-rendering: crispEdges;
+	stroke: black;
+	fill: none;
+}
+
+.line {
+	fill: none;
+	stroke-width: 1.5px;
+}
+
+.C07 {
+	stroke: steelblue;
+}
+
+.C16 {
+	stroke: pink;
+}
+
+.femaleDot {
+	fill: white;
+	stroke: gray;
+	stroke-width: 1.5px;
+}
+
+.maleDot {
+	fill: gray;
+	stroke: gray;
+	stroke-width: 1.5px;
+}
+
+.axisLable {
+	font: 14px Arial;
+	text-anchor: middle;
+	font-weight: bold;
+}
+
+.yearLabel {
+	font-size: 32px;
+	font-family: "Times New Roman", Georgia, Serif;
+	font-weight: bold;
+}
+
+input[type="range"] {
+	width: 900px;
+	margin-left: 60px;
+	margin-top: 50px;
+}
+
+/* colors */
+
+.C07 {
+	stroke: #6699FF;
+}
+
+.C15 {
+	stroke:	#00FF99;
+}
+
+.C16 {
+	stroke:	#FF9933;
+}
+
+.C17 {
+	stroke:	#6600CC;
+}
+
+.C18 {
+	stroke:	#CC6666;
+}
+
+.C19 {
+	stroke:	#FF99FF;
+}
+
+.C20 {
+	stroke:	#5CFFAD;
+}
+
+.C21 {
+	stroke:	#CC99FF;
+}
+
+.C22 {
+	stroke:	#9999FF;
+}
+
+.C23 {
+	stroke:	#FFFF99;
+}
+
+.C24 {
+	stroke:	#FFCC00;
+}
+
+.C25 {
+	stroke:	#48488E;
+}
+
+.C32 {
+	stroke:	#3DB1FF;
+}
+
+.C34 {
+	stroke:	#FFAF7A;
+}
+
+.C43 {
+	stroke:	#9933FF;
+}
+
+.C44 {
+	stroke:	#33FF99;
+}
+
+.C48 {
+	stroke:	#FF9933;
+}
+
+.C49 {
+	stroke:	#8FFFFF;
+}
+
+.C50 {
+	stroke:	#CCFFFF;
+}
+
+.C64 {
+	stroke:	#FFFF66;
+}
+
+.C67 {
+	stroke:	#99FF66;
+}
+
+.C69 {
+	stroke:	#CC99FF;
+}
+
+.C71 {
+	stroke:	#66FFFF;
+}
+
+.C73 {
+	stroke:	#99CC00;
+}
+
+.C80 {
+	stroke:	#009933;
+}
+
+.C81 {
+	stroke:	#33CCCC;
+}
+
+.C82 {
+	stroke:	#0033CC;
+}
+
+.C83 {
+	stroke:	#CC33FF;
+}
+
+.C85 {
+	stroke:	#FF99FF;
+}
+
+.C88 {
+	stroke:	#666699;
+}
+
+.C90 {
+	stroke:	#990099;
+}
+
+.C91 {
+	stroke:	#009999;
+}
+
+.C92 {
+	stroke:	#000099;
+}
+
+.C96 {
+	stroke:	#CC6600;
+}

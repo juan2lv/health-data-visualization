@@ -2,28 +2,50 @@
 <html>
 <head>
 	<title>Data Chart</title>
-	<link rel="stylesheet" type="text/css" href="chart.css" />
-	<script type="text/javascript" src="d3-3.1.0/d3.min.js"></script>
-	<script type="text/javascript" src="jquery-2.1.4.min.js"></script>
-	<script type="text/javascript" src="chart.js"></script>
+	<link rel="stylesheet" type="text/css" href="./chart.css" />
+	<link rel="stylesheet" type="text/css" href="./switchery.css" />
+	<link rel="stylesheet" type="text/css" href="./loda-button.css" />
+	<script type="text/javascript" src="./d3-3.1.0/d3.min.js"></script>
+	<script type="text/javascript" src="./jquery-2.1.4.min.js"></script>
+	<script type="text/javascript" src="./switchery.js"></script>
+	<script type="text/javascript" src="./chart.js"></script>
 </head>
 <body>
-	<div id='content'>
-      <!-- /the chart goes here -->
-    </div>
-    <input type="range" value="2000" min="2000" max="2010" list="number" id="yearSlider" />
-	<datalist id="number">
-		<option>2000</option> 
-		<option>2001</option> 
-		<option>2002</option> 
-		<option>2003</option> 
-		<option>2004</option>
-		<option>2005</option> 
-		<option>2006</option> 
-		<option>2007</option> 
-		<option>2008</option> 
-		<option>2009</option>
-		<option>2010</option>
-	</datalist>
+	<table >
+		<tr>
+			<td>
+				<div>
+					<div id="chart">
+						<!-- /the chart goes here -->
+					</div>
+			    
+				    <input type="range" value="1994" min="1994" max="2010" list="number" id="yearSlider" />
+					<datalist id="number">
+						<option>1994</option> 
+						<option>1995</option> 
+						<option>1996</option> 
+						<option>1997</option> 
+						<option>1998</option>
+						<option>1999</option>
+						<option>2000</option> 
+						<option>2001</option> 
+						<option>2002</option> 
+						<option>2003</option> 
+						<option>2004</option>
+						<option>2005</option> 
+						<option>2006</option> 
+						<option>2007</option> 
+						<option>2008</option> 
+						<option>2009</option>
+						<option>2010</option>
+					</datalist>
+				</div>
+			</td>
+			<td>
+				<div id="checkbox_div">
+				</div>
+			</td> 
+		</tr>
+	</table>
 </body>
 </html>
